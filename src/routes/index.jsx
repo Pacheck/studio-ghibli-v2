@@ -1,6 +1,7 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom';
 
+import { Navbar } from '../components/layout/navbar';
 import { Home } from '../pages/home';
 
 const routes = [
@@ -8,11 +9,14 @@ const routes = [
 ]
 const MyRoutes = () => {
   return (
-    <Routes>
-      {
-        routes.map(routeProp => <Route key={routeProp.id} {...routeProp} />)
-      }
-    </Routes>
+    <>
+      <Navbar />
+      <Routes>
+        {
+          routes.map((routeProps) => <Route key={routeProps.id} {...routeProps} />)
+        }
+      </Routes>
+    </>
   )
 }
 
