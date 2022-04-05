@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import Logo from '../../../assets/logo.png';
+import Logo from '../../../assets/images/logo.png';
 
 import { Navbar } from '.'
 
@@ -47,5 +47,28 @@ describe('rendering navbar', () => {
     const nav = screen.getByRole('navbar', { name: /navbar/i });
 
     expect(nav).toHaveStyle('background-color: #80bdf0');
+  });
+
+  test('should navbar contains 5 items and render ordered by render priority', () => {
+    render(
+      <Router>
+        <Navbar />
+      </Router>
+    );
+
+    const list = screen.getByRole('list', { name: /nav-list/i });
+    const { getAllByRole } = within(list);
+    const itemList = getAllByRole('listitem', { name: /nav-item/i });
+  
+    const linkNames = itemList.map(link => link.textContent);
+
+    expect(itemList.length).toBe(5);
+    expect(linkNames).toEqual([
+      "Filmes",
+      "Personagens",
+      "Espécies",
+      "Locais",
+      "Veículos"
+    ])
   });
 })
