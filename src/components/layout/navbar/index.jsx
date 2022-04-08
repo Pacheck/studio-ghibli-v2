@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 
 import LogoImg from '../../../assets/images/logo.png';
-import { Container, Logo, List, ListItem } from './styles'
+import { Container, Logo, List, ListItem, Wrapper } from './styles'
 
 import { initialPath, especies, locais, personagens, veiculos } from './constants';
 
@@ -39,18 +39,20 @@ export function Navbar() {
 
   return (
     <Container role='navbar' aria-label='navbar'>
-      <Logo src={LogoImg} alt="Ghibli studio" />
-      <section>
-        <List aria-label="nav-list">
-          {
-            listItems.map(({ path, name }) => (
-              <ListItem key={name} aria-label="nav-item" currentPage={selectedNavItem === name}>
-                <Link to={path}>{name}</Link>
-              </ListItem>
-            ))
-          }
-        </List>
-      </section>
+      <Wrapper>
+        <Logo src={LogoImg} alt="Ghibli studio" />
+        <section>
+          <List aria-label="nav-list">
+            {
+              listItems.map(({ path, name }) => (
+                <ListItem key={name} aria-label="nav-item" currentPage={selectedNavItem === name}>
+                  <Link to={path}>{name}</Link>
+                </ListItem>
+              ))
+            }
+          </List>
+        </section>
+      </Wrapper>
     </Container>
   )
 }
