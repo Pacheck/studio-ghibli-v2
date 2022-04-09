@@ -4,9 +4,6 @@ import Axios from '../services/axiosInstance';
 export const useRequest = (url) => {
   const [responseArray, setResponseArray] = useState([]);
 
-
-
-
   useEffect(() => {
     async function getData () {
       try {
