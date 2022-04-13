@@ -2,24 +2,80 @@ import { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 
 import LogoImg from '../../../assets/images/logo.png';
-import { Container, Logo, List, ListItem, Wrapper } from './styles'
+import MenuLogo from '../../../assets/images/burger.svg';
+import CloseMenu from '../../../assets/images/close.png';
 
-import { initialPath, especies, locais, personagens, veiculos } from './constants';
+import {
+  Container,
+  Logo,
+  List,
+  ListItem,
+  Wrapper,
+  BurgerLogo,
+  HiddenMenuContainer,
+  HiddenMenuList,
+  HiddenMenuItem,
+} from './styles';
+import {
+  initialPath,
+  especies,
+  locais,
+  personagens,
+  veiculos,
+} from './constants';
 
 const listItems = [
-  { path: initialPath, name: 'Filmes' }, 
-  { path: personagens, name: 'Personagens' }, 
-  { path: especies, name: 'Espécies' }, 
-  { path: locais, name: 'Locais' }, 
-  { path: veiculos, name: 'Veículos' }
+  { path: initialPath, name: 'Filmes' },
+  { path: personagens, name: 'Personagens' },
+  { path: especies, name: 'Espécies' },
+  { path: locais, name: 'Locais' },
+  { path: veiculos, name: 'Veículos' },
 ];
 
 export function Navbar() {
   const [selectedNavItem, setSelectedNavItem] = useState(null);
+  const [isMenuActive, setIsMenuActive] = useState(false);
+
   const location = useLocation();
-  
+
+  const handleToggleActiveMenu = () => setIsMenuActive((prev) => !prev);
+
+  const handleRenderMenuIcon = () => {
+    if (!isMenuActive)
+      return (
+        <BurgerLogo
+          src={MenuLogo}
+          alt="burger logo"
+          onClick={handleToggleActiveMenu}
+        />
+      );
+    return (
+      <BurgerLogo
+        src={CloseMenu}
+        alt="burger logo"
+        onClick={handleToggleActiveMenu}
+      />
+    );
+  };
+
+  const handleRenderMenuItems = (ComponentToRender, menuType) => {
+    if (menuType === 'hiddenMenu' && !isMenuActive) return null;
+    return listItems.map(({ path, name }) => {
+      return (
+        <ComponentToRender
+          key={name}
+          aria-label="nav-item"
+          currentPage={selectedNavItem === name}
+        >
+          <Link to={path}>{name}</Link>
+        </ComponentToRender>
+      );
+    });
+  };
   useEffect(() => {
-    switch(location.pathname){
+    setIsMenuActive(false);
+
+    switch (location.pathname) {
       case personagens:
         setSelectedNavItem('Personagens');
         break;
@@ -35,24 +91,22 @@ export function Navbar() {
       default:
         setSelectedNavItem('Filmes');
     }
-  }, [location.pathname, selectedNavItem])
+  }, [location.pathname, selectedNavItem]);
 
   return (
-    <Container role='navbar' aria-label='navbar'>
+    <Container role="navbar" aria-label="navbar">
       <Wrapper>
         <Logo src={LogoImg} alt="Ghibli studio" />
         <section>
-          <List aria-label="nav-list">
-            {
-              listItems.map(({ path, name }) => (
-                <ListItem key={name} aria-label="nav-item" currentPage={selectedNavItem === name}>
-                  <Link to={path}>{name}</Link>
-                </ListItem>
-              ))
-            }
-          </List>
+          <List aria-label="nav-list">{handleRenderMenuItems(ListItem)}</List>
+          {handleRenderMenuIcon()}
         </section>
+        <HiddenMenuContainer>
+          <HiddenMenuList>
+            {handleRenderMenuItems(HiddenMenuItem, 'hiddenMenu')}
+          </HiddenMenuList>
+        </HiddenMenuContainer>
       </Wrapper>
     </Container>
-  )
+  );
 }
